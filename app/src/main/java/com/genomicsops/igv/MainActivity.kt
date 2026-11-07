@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.genomicsops.igv.ui.GenomicsTheme
-import com.genomicsops.igv.ui.SplashScreen
+import com.genomicsops.igv.ui.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +29,7 @@ fun AppRoot() {
             factory = { ctx ->
                 WebView(ctx).apply {
                     settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
                     webViewClient = WebViewClient()
                     loadUrl("file:///android_asset/igv.html")
                 }
