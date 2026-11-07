@@ -4,11 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/igv@2.15.11/dist/igv.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; background: #06080A; color: white; }
-        #igvDiv { padding-top: 50px; }
+        body { margin: 0; padding: 0; background: #06080A; color: #00E5FF; font-family: sans-serif; }
+        #header { padding: 16px; background: #12171C; display: flex; justify-content: space-between; align-items: center; }
+        #header h2 { margin: 0; font-size: 18px; }
+        button { background: #00E5FF; color: #06080A; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; }
+        #igvDiv { margin-top: 8px; }
     </style>
 </head>
 <body>
+    <div id="header">
+        <h2>IGV Genome Browser</h2>
+        <button onclick="AndroidBridge.openFilePicker()">Load Track</button>
+    </div>
     <div id="igvDiv"></div>
     <script>
         var options = {
@@ -20,6 +27,7 @@
         };
         var igvDiv = document.getElementById("igvDiv");
         igv.createBrowser(igvDiv, options).then(function (browser) {
+            window.igv = { browser: browser };
             console.log("IGV Browser created");
         });
     </script>
