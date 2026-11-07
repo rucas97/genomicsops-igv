@@ -5,16 +5,17 @@
     <script src="https://cdn.jsdelivr.net/npm/igv@2.15.11/dist/igv.min.js"></script>
     <style>
         body { margin: 0; padding: 0; background: #06080A; color: #00E5FF; font-family: sans-serif; }
-        #header { padding: 16px; background: #12171C; display: flex; justify-content: space-between; align-items: center; }
-        #header h2 { margin: 0; font-size: 18px; }
-        button { background: #00E5FF; color: #06080A; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #06080A; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
+        .spinner { border: 4px solid #12171C; border-top: 4px solid #00E5FF; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #igvDiv { margin-top: 8px; }
     </style>
 </head>
 <body>
-    <div id="header">
-        <h2>IGV Genome Browser</h2>
-        <button onclick="AndroidBridge.openFilePicker()">Load Track</button>
+    <div id="loader">
+        <div class="spinner"></div>
+        <div>Downloading Human Genome (hg38)...</div>
+        <div style="font-size: 12px; color: #8B949E; margin-top: 8px;">This may take a moment on first launch.</div>
     </div>
     <div id="igvDiv"></div>
     <script>
@@ -22,13 +23,15 @@
             genome: "hg38",
             locus: "BRCA1",
             showNavigation: true,
-            showRuler: true,
-            tracks: []
+            showRuler: true
         };
         var igvDiv = document.getElementById("igvDiv");
         igv.createBrowser(igvDiv, options).then(function (browser) {
             window.igv = { browser: browser };
+            document.getElementById("loader").style.display = "none"; // Hide loader
             console.log("IGV Browser created");
+        }).catch(function(err) {
+            document.getElementById("loader").innerHTML = "<div style='color:#FF0055'>Error loading IGV: " + err + "</div>";
         });
     </script>
 </body>
