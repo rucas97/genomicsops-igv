@@ -33,7 +33,6 @@ fun AppRoot() {
 
     val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
-            // Pass the local file URI to IGV.js
             val js = "igv.browser.loadTrack({ url: '$uri', name: 'Loaded Track' })"
             webViewInstance?.evaluateJavascript(js, null)
             Toast.makeText(webViewInstance?.context, "Loading track...", Toast.LENGTH_SHORT).show()
@@ -46,10 +45,7 @@ fun AppRoot() {
         AndroidView(
             factory = { ctx ->
                 WebView(ctx).apply {
-                    // 1. Hardware acceleration fixes the black screen
                     setLayerType(View.LAYER_TYPE_HARDWARE, null)
-                    
-                    // 2. Allow file access
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.allowFileAccess = true
@@ -59,7 +55,6 @@ fun AppRoot() {
                     
                     webViewClient = WebViewClient()
                     
-                    // 3. Add Bridge so JS can trigger the Android file picker
                     addJavascriptInterface(object {
                         @JavascriptInterface
                         fun openFilePicker() {
@@ -69,7 +64,6 @@ fun AppRoot() {
                         }
                     }, "AndroidBridge")
                     
-                    // Load the HTML file
                     loadUrl("file:///android_asset/igv.html")
                     webViewInstance = this
                 }
