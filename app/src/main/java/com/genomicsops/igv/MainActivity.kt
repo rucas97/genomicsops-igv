@@ -30,6 +30,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -147,16 +148,18 @@ fun AppRoot() {
                                 
                                 // Calculate the actual genomic coordinate for the label
                                 val coord = (minStart + (genomicSpan / 10f) * i).toLong()
-                                drawContext.canvas.nativeCanvas.drawText(
-                                    coord.toString(),
-                                    x - 15f, // Center text roughly
-                                    rulerY - 15f,
-                                    android.graphics.Paint().apply {
-                                        color = android.graphics.Color.LTGRAY
-                                        textSize = 24f
-                                        typeface = android.graphics.Typeface.MONOSPACE
-                                    }
-                                )
+                                drawIntoCanvas { canvas ->
+                                    canvas.nativeCanvas.drawText(
+                                        coord.toString(),
+                                        x - 15f,
+                                        rulerY - 15f,
+                                        android.graphics.Paint().apply {
+                                            color = android.graphics.Color.LTGRAY
+                                            textSize = 24f
+                                            typeface = android.graphics.Typeface.MONOSPACE
+                                        }
+                                    )
+                                }
                             }
                             // 2. Draw Track Lane Background
                             val trackY = 80f
@@ -199,16 +202,18 @@ fun AppRoot() {
                                 
                                 // Draw Feature Name inside the box if wide enough
                                 if (boxWidth > 100f) {
-                                    drawContext.canvas.nativeCanvas.drawText(
-                                        feature.name,
-                                        x1 + 10f,
-                                        trackY + 75f,
-                                        android.graphics.Paint().apply {
-                                            color = android.graphics.Color.BLACK
-                                            textSize = 28f
-                                            typeface = android.graphics.Typeface.DEFAULT_BOLD
-                                        }
-                                    )
+                                    drawIntoCanvas { canvas ->
+                                        canvas.nativeCanvas.drawText(
+                                            feature.name,
+                                            x1 + 10f,
+                                            trackY + 75f,
+                                            android.graphics.Paint().apply {
+                                                color = android.graphics.Color.BLACK
+                                                textSize = 28f
+                                                typeface = android.graphics.Typeface.DEFAULT_BOLD
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
