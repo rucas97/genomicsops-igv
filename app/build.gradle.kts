@@ -46,7 +46,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.webkit:webkit:1.10.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     testImplementation("junit:junit:4.13.2")
