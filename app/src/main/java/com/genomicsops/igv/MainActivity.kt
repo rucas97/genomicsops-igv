@@ -88,7 +88,8 @@ fun AppRoot() {
                             
                         webViewClient = object : WebViewClient() {
                             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                                return assetLoader.shouldInterceptRequest(request?.url)
+                                if (request == null) return null
+                                return assetLoader.shouldInterceptRequest(request.url)
                             }
                         }
                         
