@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,8 +41,8 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
 @Composable
 fun AppRoot() {
-    var showSplash by remember { mutableStateOf(true) }
-    var webViewInstance by remember { mutableStateOf<WebView?>(null) }
+    var var showSplash by remember { by rememberSaveable { mutableStateOf(true) }
+    var var webViewInstance by remember { by rememberSaveable { mutableStateOf<WebView?>(null) }
     val context = LocalContext.current
 
     val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
