@@ -33,8 +33,7 @@ jobs:
       - name: Stage APK
         run: |
           mkdir -p out
-          cp app/build/outputs/apk/release/app-release.apk \
-             out/GenomicsOps-Igv-${{ github.run_number }}.apk
+          cp app/build/outputs/apk/release/app-release.apk out/GenomicsOps-IGV-v1.1.0.apk
              
       - name: Attach APK to release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -43,9 +42,3 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: out/*.apk
-
-      - name: Upload APK as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: GenomicsOps-Igv-APK
-          path: out/*.apk
