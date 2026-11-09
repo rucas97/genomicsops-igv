@@ -9,7 +9,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -41,13 +40,12 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
 @Composable
 fun AppRoot() {
-    var var showSplash by remember { by rememberSaveable { mutableStateOf(true) }
-    var var webViewInstance by remember { by rememberSaveable { mutableStateOf<WebView?>(null) }
+    var showSplash by rememberSaveable { mutableStateOf(true) }
+    var webViewInstance by remember { mutableStateOf<WebView?>(null) }
     val context = LocalContext.current
 
     val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
-            // Read the file and pass as a Blob URL to bypass local file restriction
             val content = context.contentResolver.openInputStream(uri)?.bufferedReader()?.readText()
             if (content != null) {
                 val safeJsString = org.json.JSONObject.quote(content)
@@ -72,7 +70,7 @@ fun AppRoot() {
                     Button(onClick = { filePicker.launch("*/*") }, colors = ButtonDefaults.buttonColors(containerColor = GenomicsDark)) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Load", tint = GenomicsTeal)
                         Spacer(Modifier.width(8.dp))
-                        Text("Load .bed", color = GenomicsText)
+                        Text("Load Track", color = GenomicsText)
                     }
                 }
             }
@@ -83,18 +81,24 @@ fun AppRoot() {
                         setLayerType(View.LAYER_TYPE_HARDWARE, null)
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
-                        // FIX: Use AssetLoader to bypass file:// block
+                        
                         val assetLoader = WebViewAssetLoader.Builder()
                             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(ctx))
                             .build()
+                            
                         webViewClient = object : WebViewClient() {
                             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
                                 return assetLoader.shouldInterceptRequest(request?.url)
                             }
                         }
+                        
                         addJavascriptInterface(object {
-                            @JavascriptInterface fun openFilePicker() { (ctx as? android.app.Activity)?.runOnUiThread { filePicker.launch("*/*") } }
+                            @JavascriptInterface 
+                            fun openFilePicker() { 
+                                (ctx as? android.app.Activity)?.runOnUiThread { filePicker.launch("*/*") } 
+                            }
                         }, "AndroidBridge")
+                        
                         loadUrl("https://appassets.androidplatform.net/assets/igv.html")
                         webViewInstance = this
                     }
